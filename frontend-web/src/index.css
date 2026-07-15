@@ -1,0 +1,156 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* ─── THEME COLOUR TOKENS ─────────────────────────────────────────────────── */
+:root {
+  /* Light mode: dark text on light backgrounds */
+  --text-primary:   #0f172a;   /* almost black */
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
+  --bg-page:        #f1f5f9;   /* soft gray-blue page */
+  --bg-card:        #ffffff;   /* white cards */
+  --bg-input:       #ffffff;
+  --bg-nav:         rgba(255,255,255,0.95);
+  --border-color:   #e2e8f0;
+
+  /* Slate token aliases (used by Tailwind via tailwind.config.js) */
+  --slate-50:  #f8fafc;
+  --slate-100: #0f172a;   /* → text primary */
+  --slate-200: #1e293b;
+  --slate-300: #334155;
+  --slate-400: #64748b;
+  --slate-500: #94a3b8;
+  --slate-600: #cbd5e1;
+  --slate-700: #e2e8f0;
+  --slate-755: #e2e8f0;
+  --slate-800: #e2e8f0;
+  --slate-850: #f1f5f9;
+  --slate-900: #f1f5f9;   /* → page bg */
+  --slate-950: #ffffff;   /* → card bg */
+}
+
+.dark {
+  /* Dark mode: light text on dark backgrounds */
+  --text-primary:   #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted:     #64748b;
+  --bg-page:        #0a0f1a;
+  --bg-card:        #111827;
+  --bg-input:       #0f172a;
+  --bg-nav:         rgba(10,15,26,0.97);
+  --border-color:   #1e293b;
+
+  --slate-50:  #09090b;
+  --slate-100: #f8fafc;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-755: #1e293b;
+  --slate-800: #1e293b;
+  --slate-850: #111827;
+  --slate-900: #0a0f1a;
+  --slate-950: #0a0f1a;
+}
+
+/* ─── BASE BODY & ROOT ────────────────────────────────────────────────────── */
+html, body {
+  background-color: var(--bg-page) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.theme-bg-root {
+  background-color: var(--bg-page) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ─── GLOBAL DARK MODE: force non-glass bg-white divs to be dark ──────────── */
+/* Any div/section/header/nav/aside that has bg-white class becomes dark in dark mode */
+.dark .bg-white {
+  background-color: var(--bg-card) !important;
+}
+.dark .bg-white\/80,
+.dark .bg-white\/85,
+.dark .bg-white\/95 {
+  background-color: var(--bg-nav) !important;
+}
+
+/* ─── GLOBAL LIGHT MODE: ensure dark slate bg classes become light ─────────── */
+/* Covers bg-slate-900 etc. used without dark: variant in some places */
+/* (Not needed since tailwind.config.js maps them to var(--slate-xxx)) */
+
+/* ─── FORM INPUT STYLING ──────────────────────────────────────────────────── */
+input, select, textarea {
+  background-color: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* ─── GLASSMORPHISM ───────────────────────────────────────────────────────── */
+.glass {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(0,0,0,0.07);
+}
+
+.dark .glass {
+  background: rgba(15, 23, 42, 0.55) !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* ─── LIGHT MODE GLASS ────────────────────────────────────────────────────── */
+:root:not(.dark) .glass {
+  background: rgba(255,255,255,0.82) !important;
+  border: 1px solid rgba(0,0,0,0.07) !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04) !important;
+}
+
+/* ─── TEXT COLOUR OVERRIDES (via CSS vars, so they switch with theme) ─────── */
+.text-slate-100 { color: var(--slate-100) !important; }
+.text-slate-200 { color: var(--slate-200) !important; }
+.text-slate-300 { color: var(--slate-300) !important; }
+.text-slate-400 { color: var(--slate-400) !important; }
+.text-slate-500 { color: var(--slate-500) !important; }
+.text-slate-600 { color: var(--slate-600) !important; }
+.text-slate-700 { color: var(--slate-700) !important; }
+.text-slate-800 { color: var(--slate-800) !important; }
+.text-slate-900 { color: var(--slate-900) !important; }
+
+/* ─── LIGHT MODE COLOUR CORRECTIONS ──────────────────────────────────────── */
+/* Make accents visible on white backgrounds */
+:root:not(.dark) .text-emerald-400  { color: #059669 !important; }
+:root:not(.dark) .text-emerald-600  { color: #059669 !important; }
+:root:not(.dark) .text-amber-400    { color: #d97706 !important; }
+:root:not(.dark) .text-amber-600    { color: #d97706 !important; }
+:root:not(.dark) .text-cyan-300     { color: #0891b2 !important; }
+:root:not(.dark) .text-rose-400     { color: #e11d48 !important; }
+:root:not(.dark) .text-blue-400     { color: #2563eb !important; }
+:root:not(.dark) .text-purple-400   { color: #7c3aed !important; }
+
+/* ─── SCROLLBARS ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
