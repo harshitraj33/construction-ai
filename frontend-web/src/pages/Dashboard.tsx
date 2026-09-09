@@ -446,22 +446,39 @@ export const Dashboard: React.FC = () => {
     alert("New user account created successfully! They can now log in using these credentials.");
   };
 
-  const handleDeleteUser = (usernameToDelete: string) => {
-    const targetLower = usernameToDelete.toLowerCase();
+  const handleDeleteUser = async (usernameToDelete: string, userIdToDelete?: number) => {
+    const targetLower = (usernameToDelete || '').toLowerCase();
     if (targetLower === 'harshit_raj' || (user && user.username.toLowerCase() === targetLower)) {
       alert("Error: You cannot delete the active Administrator account!");
+      setDeletingUser(null);
       return;
     }
+
     const saved = localStorage.getItem('registered_users');
-    if (saved) {
-      const list = JSON.parse(saved);
-      const updatedList = list.filter((u: any) => u.username !== targetLower);
-      localStorage.setItem('registered_users', JSON.stringify(updatedList));
-      setRegisteredUsers(updatedList);
-      setDeletingUser(null);
-      
-      if (editingUser && editingUser.username.toLowerCase() === targetLower) {
-        cancelEditingUser();
+    const currentList: any[] = saved ? JSON.parse(saved) : getRegisteredUsers();
+
+    const updatedList = currentList.filter((u: any) => {
+      const uName = (u.username || '').toLowerCase();
+      const matchUsername = uName === targetLower;
+      const matchId = userIdToDelete !== undefined && userIdToDelete !== null && u.id === userIdToDelete;
+      return !matchUsername && !matchId;
+    });
+
+    localStorage.setItem('registered_users', JSON.stringify(updatedList));
+    setRegisteredUsers(updatedList);
+    setDeletingUser(null);
+
+    if (editingUser && (editingUser.username.toLowerCase() === targetLower || (userIdToDelete && editingUser.id === userIdToDelete))) {
+      cancelEditingUser();
+    }
+
+    if (!isMocked && api) {
+      try {
+        if (userIdToDelete) {
+          await api.delete(`/api/auth/users/${userIdToDelete}/`);
+        }
+      } catch (err) {
+        console.warn("Backend API user delete attempt:", err);
       }
     }
   };
@@ -1308,7 +1325,7 @@ export const Dashboard: React.FC = () => {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
-                                  handleDeleteUser(u.username);
+                                  handleDeleteUser(u.username, u.id);
                                 }}
                                 className="px-2 py-0.5 rounded bg-rose-600 hover:bg-rose-500 text-white font-bold text-[9px] cursor-pointer"
                               >

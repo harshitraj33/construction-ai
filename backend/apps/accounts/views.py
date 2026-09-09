@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -45,3 +45,23 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class UserManagementViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().order_by('-id')
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if hasattr(user, 'role') and (user.role == 'ADMIN' or user.is_staff or user.is_superuser):
+            return User.objects.all().order_by('-id')
+        return User.objects.filter(id=user.id)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.username.lower() in ['harshit_raj', request.user.username.lower()]:
+            return Response({'detail': 'Cannot delete active administrator account.'}, status=status.HTTP_400_BAD_REQUEST)
+        self.perform_destroy(instance)
+        return Response({'detail': 'User account deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+
