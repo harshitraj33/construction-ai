@@ -1,20 +1,24 @@
 import os
+import sys
 from pathlib import Path
 from datetime import timedelta
+# pyrefly: ignore [missing-import]
 from dotenv import load_dotenv
-
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+load_dotenv(BASE_DIR / '.env')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-key-for-local-dev-1234567890')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = os.getenv('DEBUG', 'True').lower() in ('true', '1', 't')
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '*').split(',') if h.strip()]
 
 # Application definition
 INSTALLED_APPS = [
@@ -70,9 +74,9 @@ ASGI_APPLICATION = 'config.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-USE_SQLITE = os.getenv('USE_SQLITE', 'True') == 'True'
+USE_SQLITE = os.getenv('USE_SQLITE', 'True').lower() in ('true', '1', 't')
 
-if USE_SQLITE and not os.getenv('DB_HOST'):
+if USE_SQLITE or not os.getenv('DB_NAME'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -83,7 +87,7 @@ else:
     DB_NAME = os.getenv('DB_NAME', 'construction_db')
     DB_USER = os.getenv('DB_USER', 'postgres')
     DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgrespassword')
-    DB_HOST = os.getenv('DB_HOST', 'db')
+    DB_HOST = os.getenv('DB_HOST', '127.0.0.1')
     DB_PORT = os.getenv('DB_PORT', '5432')
 
     DATABASES = {
