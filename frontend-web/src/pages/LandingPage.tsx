@@ -38,6 +38,7 @@ export const LandingPage: React.FC = () => {
     phone: '',
     companyName: '',
     role: 'CONTRACTOR',
+    projectType: 'From Scratch',
     reason: ''
   });
   
@@ -66,6 +67,7 @@ export const LandingPage: React.FC = () => {
       phone: '',
       companyName: '',
       role: 'CONTRACTOR',
+      projectType: 'From Scratch',
       reason: ''
     });
   };
@@ -375,13 +377,57 @@ export const LandingPage: React.FC = () => {
                 <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Desired Portal Role *</label>
                 <select 
                   value={formData.role}
-                  onChange={e => setFormData({...formData, role: e.target.value})}
+                  onChange={e => {
+                    const newRole = e.target.value;
+                    setFormData(prev => ({
+                      ...prev,
+                      role: newRole,
+                      companyName: newRole === 'CLIENT' ? 'Personal' : (prev.companyName === 'Personal' ? '' : prev.companyName)
+                    }));
+                  }}
                   className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl py-2.5 px-4 text-xs text-slate-200 outline-none transition-all"
                 >
                   <option value="CONTRACTOR">CONTRACTOR PORTAL</option>
                   <option value="CLIENT">CLIENT PORTAL</option>
                   <option value="VENDOR">VENDOR PORTAL</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Project Type / Scope *</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                    formData.projectType === 'From Scratch' 
+                      ? 'bg-blue-600/15 border-blue-500 text-slate-100' 
+                      : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
+                  }`}>
+                    <input 
+                      type="radio" 
+                      name="projectType" 
+                      value="From Scratch"
+                      checked={formData.projectType === 'From Scratch'}
+                      onChange={e => setFormData({ ...formData, projectType: e.target.value })}
+                      className="accent-blue-500 w-4 h-4 cursor-pointer"
+                    />
+                    <span className="text-xs font-semibold">From Scratch</span>
+                  </label>
+
+                  <label className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                    formData.projectType === 'Renovate' 
+                      ? 'bg-blue-600/15 border-blue-500 text-slate-100' 
+                      : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
+                  }`}>
+                    <input 
+                      type="radio" 
+                      name="projectType" 
+                      value="Renovate"
+                      checked={formData.projectType === 'Renovate'}
+                      onChange={e => setFormData({ ...formData, projectType: e.target.value })}
+                      className="accent-blue-500 w-4 h-4 cursor-pointer"
+                    />
+                    <span className="text-xs font-semibold">Renovate</span>
+                  </label>
+                </div>
               </div>
 
               <div>
