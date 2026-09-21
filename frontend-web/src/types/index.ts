@@ -25,6 +25,7 @@ export interface Project {
   start_date: string;
   end_date?: string | null;
   budget: string;
+  project_type?: string;
   created_at: string;
   updated_at: string;
   owner_details?: User;

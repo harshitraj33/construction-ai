@@ -142,6 +142,7 @@ export const Dashboard: React.FC = () => {
   const [newProjectBudget, setNewProjectBudget] = useState('');
   const [newProjectStart, setNewProjectStart] = useState('');
   const [newProjectStatus, setNewProjectStatus] = useState<ProjectStatus>('PLANNING');
+  const [newProjectScope, setNewProjectScope] = useState<'From Scratch' | 'Renovate'>('From Scratch');
   const [newProjectContractorId, setNewProjectContractorId] = useState('');
   const [newProjectVendorId, setNewProjectVendorId] = useState('');
   const [newProjectClientId, setNewProjectClientId] = useState('');
@@ -317,6 +318,7 @@ export const Dashboard: React.FC = () => {
       budget: newProjectBudget,
       start_date: newProjectStart,
       status: newProjectStatus,
+      project_type: newProjectScope,
     };
 
     if (isMocked) {
@@ -546,6 +548,7 @@ export const Dashboard: React.FC = () => {
     setNewProjectBudget('');
     setNewProjectStart('');
     setNewProjectStatus('PLANNING');
+    setNewProjectScope('From Scratch');
     setNewProjectContractorId('');
     setNewProjectVendorId('');
     setNewProjectClientId('');
@@ -3852,6 +3855,43 @@ export const Dashboard: React.FC = () => {
                   <option value="ACTIVE">{t.active}</option>
                   <option value="ON_HOLD">{t.onHold}</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-400 uppercase mb-1">Project Type / Scope *</label>
+                <div className="grid grid-cols-2 gap-3 mt-1">
+                  <label className={`flex items-center gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all ${
+                    newProjectScope === 'From Scratch' 
+                      ? 'bg-blue-600/15 border-blue-500 text-slate-100' 
+                      : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                  }`}>
+                    <input 
+                      type="radio" 
+                      name="newProjectScope" 
+                      value="From Scratch"
+                      checked={newProjectScope === 'From Scratch'}
+                      onChange={e => setNewProjectScope(e.target.value as 'From Scratch' | 'Renovate')}
+                      className="accent-blue-500 w-3.5 h-3.5 cursor-pointer"
+                    />
+                    <span className="text-xs font-semibold">From Scratch</span>
+                  </label>
+
+                  <label className={`flex items-center gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all ${
+                    newProjectScope === 'Renovate' 
+                      ? 'bg-blue-600/15 border-blue-500 text-slate-100' 
+                      : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                  }`}>
+                    <input 
+                      type="radio" 
+                      name="newProjectScope" 
+                      value="Renovate"
+                      checked={newProjectScope === 'Renovate'}
+                      onChange={e => setNewProjectScope(e.target.value as 'From Scratch' | 'Renovate')}
+                      className="accent-blue-500 w-3.5 h-3.5 cursor-pointer"
+                    />
+                    <span className="text-xs font-semibold">Renovate</span>
+                  </label>
+                </div>
               </div>
 
               {user?.role === 'ADMIN' && (

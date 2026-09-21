@@ -12,7 +12,7 @@ if str(BASE_DIR) not in sys.path:
 
 load_dotenv(BASE_DIR / '.env')
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECURITY WARNING: keep the secret key used in production secret
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-key-for-local-dev-1234567890')
 
 # SECURITY WARNING: don't run with debug turned on in production!
